@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coverage Map</title>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Uncomment this if you want the email modal -->
+    <!-- <div id="email-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Check Coverage</h2>
+            <p>Please enter your email to proceed.</p>
+            <input type="email" id="user-email" placeholder="Enter your email" required>
+            <button onclick="submitEmail()">Submit</button>
+        </div>
+    </div> -->
+    <div id="map-container" style="display: block;">
+        <div id="map"></div>
+        <div id="sidebar" class="sidebar">
+            <h3>Check Coverage</h3>
+            <div id="geocoder" class="geocoder"></div>
+            <div id="result"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
