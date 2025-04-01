@@ -11,21 +11,23 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Uncomment this if you want the email modal -->
-    <!-- <div id="email-modal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2>Check Coverage</h2>
-            <p>Please enter your email to proceed.</p>
-            <input type="email" id="user-email" placeholder="Enter your email" required>
-            <button onclick="submitEmail()">Submit</button>
-        </div>
-    </div> -->
-    <div id="map-container" style="display: block;">
+    <div id="map-container">
         <div id="map"></div>
-        <div id="sidebar" class="sidebar">
-            <h3>Check Coverage</h3>
+        <div id="header">
+            <h2>Barn Owl Coverage map</h2>
+            <p>Check Barn Owl coverage at your address or ZIP code and unlock a special discount on your first order, plus a risk-free 45-day trial!</p>
             <div id="geocoder" class="geocoder"></div>
             <div id="result"></div>
+        </div>
+        <div id="legend">
+            <div class="legend-item">
+                <span class="legend-color coverage"></span>
+                <span>Coverage available</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color no-coverage"></span>
+                <span>No coverage</span>
+            </div>
         </div>
     </div>
     <script src="script.js"></script>

@@ -5,30 +5,95 @@ body, html {
     font-family: Arial, sans-serif;
 }
 
+#map-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
 #map {
     position: absolute;
     top: 0;
     bottom: 0;
-    width: 70%;
+    width: 100%;
+    height: 100%;
 }
 
-.sidebar {
+#header {
     position: absolute;
-    right: 0;
-    width: 30%;
-    height: 100%;
-    background: #f8f8f8;
+    top: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9);
     padding: 20px;
+    text-align: center;
     box-sizing: border-box;
 }
 
+#header h1 {
+    font-size: 16px;
+    margin: 0;
+    color: #333;
+}
+
+#header h2 {
+    font-size: 24px;
+    margin: 5px 0;
+    color: #333;
+}
+
+#header p {
+    font-size: 14px;
+    margin: 10px 0;
+    color: #666;
+}
+
 .geocoder {
-    margin-top: 20px;
+    margin: 0 auto;
+    max-width: 500px;
+    text-align: left;
+}
+
+.mapboxgl-ctrl-geocoder {
+    max-width: unset;
+    width: 100%;
 }
 
 #result {
-    margin-top: 20px;
+    margin-top: 10px;
     font-size: 16px;
+    color: #333;
+}
+
+#legend {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    gap: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+}
+
+.legend-color.coverage {
+    background-color: #115CB5;
+}
+
+.legend-color.no-coverage {
+    background-color: transparent;
 }
 
 .modal {

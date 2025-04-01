@@ -5,14 +5,14 @@ mapboxgl.accessToken = 'pk.eyJ1Ijoic3RldmVmZXJuYW5kZXMiLCJhIjoiY202ZjdiY282MDI4c
 const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: [-95, 31],
-    zoom: 6
+    center: [-98, 39], // Center of the US
+    zoom: 3 // Zoomed out to show the entire US
 });
 
 const geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
     mapboxgl: mapboxgl,
-    placeholder: 'Enter address or ZIP code'
+    placeholder: 'Search address or location'
 });
 
 document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
@@ -131,7 +131,6 @@ function submitEmail() {
     }
 }
 
-// Email handling for Version 2 (post-check)
 function saveEmail() {
     const email = document.getElementById('user-email').value;
     if (email) {
