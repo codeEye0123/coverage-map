@@ -12,13 +12,10 @@
 </head>
 <body>
     <div id="map-container">
-        <div id="map"></div>
         <div id="header">
-            <h2>Barn Owl Coverage map</h2>
-            <p>Check Barn Owl coverage at your address or ZIP code and unlock a special discount on your first order, plus a risk-free 45-day trial!</p>
             <div id="geocoder" class="geocoder"></div>
-            <div id="result"></div>
         </div>
+        <div id="map"></div>
         <div id="legend">
             <div class="legend-item">
                 <span class="legend-color coverage"></span>
@@ -27,6 +24,10 @@
             <div class="legend-item">
                 <span class="legend-color no-coverage"></span>
                 <span>No coverage</span>
+            </div>
+        </div>
+        <div id="coverage-modal" class="modal" style="display: none;">
+            <div id="coverage-modal-content" class="modal-content">
             </div>
         </div>
     </div>

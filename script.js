@@ -66,6 +66,21 @@ function getPixelCoords(lng, lat, tileX, tileY, zoom) {
     return { x: pixelX, y: pixelY };
 }
 
+function showModal(content, className) {
+    const modal = document.getElementById('coverage-modal');
+    const modalContent = document.getElementById('coverage-modal-content');
+    
+    modalContent.className = `modal-content ${className}`;
+    modalContent.innerHTML = content;
+    modal.style.display = 'flex';
+
+    modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
+
 geocoder.on('result', (e) => {
     const coords = e.result.center;
     console.log('Geocoder result:', coords);
@@ -94,25 +109,50 @@ geocoder.on('result', (e) => {
             const pixelData = context.getImageData(pixel.x, pixel.y, 1, 1).data;
             console.log('Pixel data (RGBA):', pixelData);
 
-            const result = document.getElementById('result');
             if (pixelData[3] > 0) {
-                result.innerHTML = '<p><strong>Covered:</strong> Service available here!</p>';
+                const content = `
+                    <h3>✅ Great news! Barn Owl has excellent coverage in your area!</h3>
+                    <p>Enjoy 10% OFF your first order + a Risk-Free 45-Day Trial! Just enter your email to claim your special offer.</p>
+                    <form id="coverage-form">
+                        <input type="text" id="first-name" placeholder="First Name" required>
+                        <input type="text" id="last-name" placeholder="Last Name" required>
+                        <input type="email" id="email" placeholder="Email Address" required>
+                        <input type="tel" id="phone" placeholder="Phone Number" required>
+                        <button type="submit">Shop 10% OFF Now</button>
+                    </form>
+                `;
+                showModal(content, 'coverage');
+
+                document.getElementById('coverage-form').addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    const firstName = document.getElementById('first-name').value;
+                    const lastName = document.getElementById('last-name').value;
+                    const email = document.getElementById('email').value;
+                    const phone = document.getElementById('phone').value;
+
+                    if (firstName && lastName && email && phone) {
+                        submitToKlaviyo(firstName, lastName, email, phone);
+                    } else {
+                        alert('Please fill out all fields.');
+                    }
+                });
             } else {
-                result.innerHTML = '<p><strong>Not Covered:</strong> No service available.</p>';
+                const content = `
+                    <h3>No Coverage</h3>
+                    <p>It looks like this spot doesn’t have coverage, but don’t worry! <br/> Try checking a nearby location to claim your discount.</p>
+                `;
+                showModal(content, 'no-coverage');
             }
         } else {
             console.log('Pixel out of tile bounds');
-            document.getElementById('result').innerHTML = '<p>Error: Point outside tile</p>';
-        }
-
-        if (document.getElementById('post-check')) {
-            const modal = document.getElementById('email-modal');
-            if (modal) modal.style.display = 'flex';
+            const content = '<p>Error: Point outside tile</p>';
+            showModal(content, 'no-coverage');
         }
     };
     img.onerror = () => {
         console.error('Failed to load tile image');
-        document.getElementById('result').innerHTML = '<p>Error loading coverage data</p>';
+        const content = '<p>Error loading coverage data</p>';
+        showModal(content, 'no-coverage');
     };
     img.src = tileUrl;
 });
