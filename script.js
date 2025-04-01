@@ -1,12 +1,18 @@
-// Set Mapbox access token
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3RldmVmZXJuYW5kZXMiLCJhIjoiY202ZjdiY282MDI4cjJyb21sdTNpc2RscSJ9._ZV-quUh6eC0Oa_OiRaCGA';
 
-// Initialize the map
+const usBounds = [
+    [-125, 24],
+    [-66, 49]
+];
+
 const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: [-98, 39], // Center of the US
-    zoom: 3 // Zoomed out to show the entire US
+    center: [-98, 39],
+    zoom: 3,
+    maxBounds: usBounds,
+    minZoom: 3,
+    maxZoom: 17
 });
 
 const geocoder = new MapboxGeocoder({
@@ -34,9 +40,8 @@ map.on('load', () => {
     console.log('Raster layer added');
 });
 
-// Function to convert lat/lng to tile coordinates
 function lngLatToTile(lng, lat, zoom) {
-    const tileSize = 256; // Mapbox uses 512x512 tiles for raster
+    const tileSize = 256;
     const n = Math.pow(2, zoom);
     const x = Math.floor(((lng + 180) / 360) * n);
     const latRad = lat * Math.PI / 180;
@@ -44,7 +49,6 @@ function lngLatToTile(lng, lat, zoom) {
     return { x, y, z: zoom };
 }
 
-// Function to get pixel coordinates within the tile
 function getPixelCoords(lng, lat, tileX, tileY, zoom) {
     const tileSize = 256;
     const n = Math.pow(2, zoom);
@@ -63,12 +67,11 @@ function getPixelCoords(lng, lat, tileX, tileY, zoom) {
 }
 
 geocoder.on('result', (e) => {
-    const coords = e.result.center; // [lng, lat]
+    const coords = e.result.center;
     console.log('Geocoder result:', coords);
     map.flyTo({ center: coords, zoom: 12 });
 
-    // Use Raster Tiles API to fetch the tile
-    const zoom = 12; // Match the zoom level after flyTo
+    const zoom = 12;
     const { x, y, z } = lngLatToTile(coords[0], coords[1], zoom);
     console.log('Tile coordinates:', { x, y, z });
 
@@ -76,27 +79,23 @@ geocoder.on('result', (e) => {
     console.log('Fetching tile:', tileUrl);
 
     const img = new Image();
-    img.crossOrigin = 'Anonymous'; // Allow canvas access to external image
+    img.crossOrigin = 'Anonymous';
     img.onload = () => {
-        // Create a canvas to analyze the tile
         const canvas = document.createElement('canvas');
-        canvas.width = 256; // Match Mapbox raster tile size
+        canvas.width = 256;
         canvas.height = 256;
         const context = canvas.getContext('2d');
         context.drawImage(img, 0, 0);
 
-        // Get pixel coordinates within the tile
         const pixel = getPixelCoords(coords[0], coords[1], x, y, z);
         console.log('Pixel coordinates:', pixel);
 
-        // Ensure pixel is within bounds
         if (pixel.x >= 0 && pixel.x < 256 && pixel.y >= 0 && pixel.y < 256) {
             const pixelData = context.getImageData(pixel.x, pixel.y, 1, 1).data;
             console.log('Pixel data (RGBA):', pixelData);
 
             const result = document.getElementById('result');
-            // Adjust this condition based on your raster's coverage color
-            if (pixelData[3] > 0) { // Non-transparent = coverage (example)
+            if (pixelData[3] > 0) {
                 result.innerHTML = '<p><strong>Covered:</strong> Service available here!</p>';
             } else {
                 result.innerHTML = '<p><strong>Not Covered:</strong> No service available.</p>';
@@ -106,7 +105,6 @@ geocoder.on('result', (e) => {
             document.getElementById('result').innerHTML = '<p>Error: Point outside tile</p>';
         }
 
-        // Post-check modal logic
         if (document.getElementById('post-check')) {
             const modal = document.getElementById('email-modal');
             if (modal) modal.style.display = 'flex';
@@ -119,7 +117,6 @@ geocoder.on('result', (e) => {
     img.src = tileUrl;
 });
 
-// Email handling for Version 1 (upfront)
 function submitEmail() {
     const email = document.getElementById('user-email').value;
     if (email) {
