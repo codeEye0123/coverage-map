@@ -1,6 +1,10 @@
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3RldmVmZXJuYW5kZXMiLCJhIjoiY202ZjdiY282MDI4cjJyb21sdTNpc2RscSJ9._ZV-quUh6eC0Oa_OiRaCGA';
 
-const states = ['texas', 'arizona', 'arkansas'];
+const states = [
+    { name: 'texas', short_code: 'US-TX' },
+    { name: 'arizona', short_code: 'US-AZ' },
+    { name: 'arkansas', short_code: 'US-AR' },
+];
 
 const usBounds = [
     [-125, 24],
@@ -10,7 +14,7 @@ const usBounds = [
 const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: [-98, 39],
+    center: [-98, 39], // Center of US
     zoom: 3,
     maxBounds: usBounds,
     minZoom: 3,
@@ -20,7 +24,7 @@ const map = new mapboxgl.Map({
 const geocoder = new MapboxGeocoder({
     accessToken: mapboxgl.accessToken,
     mapboxgl: mapboxgl,
-    placeholder: 'Search address or location'
+    placeholder: 'Search address or location in the US',
 });
 
 document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
@@ -28,22 +32,21 @@ document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 map.on('load', () => {
     console.log('Map loaded');
     states.forEach(state => {
-        map.addSource(`${state}-coverage-source`, {
+        map.addSource(`${state.name}-coverage-source`, {
             type: 'raster',
-            url: `mapbox://stevefernandes.${state}-mobile-coverage`
+            url: `mapbox://stevefernandes.${state.name}-mobile-coverage`
         });
-    })
+    });
     states.forEach(state => {
         map.addLayer({
-            id: `${state}-coverage`,
+            id: `${state.name}-coverage`,
             type: 'raster',
-            source: `${state}-coverage-source`,
+            source: `${state.name}-coverage-source`,
             paint: {
                 'raster-opacity': 0.5
             }
         });
-    })
-    // map.setPaintProperty('texas-coverage', 'raster-hue-rotate', 180);
+    });
     console.log('Raster layer added');
 });
 
@@ -91,6 +94,14 @@ function showModal(content, className) {
 geocoder.on('result', (e) => {
     const coords = e.result.center;
     console.log('Geocoder result:', coords);
+
+    const country = e.result.context?.find((c) => c.id.includes('country'))?.short_code;
+    if (!country || country.toLowerCase() !== 'us') {
+        console.log('Location is not in the US');
+        showModal('<p>Please search for a location within the United States.</p>', 'no-coverage');
+        return;
+    }
+
     map.flyTo({ center: coords, zoom: 12 });
 
     const zoom = 12;
@@ -98,19 +109,19 @@ geocoder.on('result', (e) => {
     console.log('Tile coordinates:', { x, y, z });
 
     let state = null;
-    const country = e.result.context?.find((c) => c.id.includes('country'))?.short_code;
+    const region = e.result.context?.find((c) => c.id.includes('region'));
+    state = region ? region.short_code : null;
+    console.log('State:', state);
 
-    if (country && country.toLowerCase() === 'us') {
-        const region = e.result.context?.find((c) => c.id.includes('region'));
-        state = region ? region.short_code : null;
-        const stateAbbr = region ? region.short_code : null;
-        console.log('State:', state);
-        console.log('State Abbreviation:', stateAbbr);
-    } else {
-        console.log('Location is not in the US');
+    const stateObj = states.find(item => item.short_code === state);
+    if (!stateObj) {
+        console.log('State not supported in coverage data');
+        showModal('<p>Coverage data not available for this state.</p>', 'no-coverage');
+        return;
     }
+    const stateName = stateObj.name;
 
-    const tileUrl = `https://api.mapbox.com/v4/stevefernandes.texas-mobile-coverage/${z}/${x}/${y}.png?access_token=${mapboxgl.accessToken}`;
+    const tileUrl = `https://api.mapbox.com/v4/stevefernandes.${stateName}-mobile-coverage/${z}/${x}/${y}.png?access_token=${mapboxgl.accessToken}`;
     console.log('Fetching tile:', tileUrl);
 
     const img = new Image();
@@ -151,7 +162,7 @@ geocoder.on('result', (e) => {
                     const phone = document.getElementById('phone').value;
 
                     if (firstName && lastName && email && phone) {
-                        submitToKlaviyo(firstName, lastName, email, phone);
+                        submitToKlaviyo(firstName, lastName, email, phone); // Assuming this function exists
                     } else {
                         alert('Please fill out all fields.');
                     }
