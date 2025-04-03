@@ -1,5 +1,7 @@
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3RldmVmZXJuYW5kZXMiLCJhIjoiY202ZjdiY282MDI4cjJyb21sdTNpc2RscSJ9._ZV-quUh6eC0Oa_OiRaCGA';
 
+const states = ['texas', 'arizona', 'arkansas'];
+
 const usBounds = [
     [-125, 24],
     [-66, 49]
@@ -25,18 +27,23 @@ document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
 map.on('load', () => {
     console.log('Map loaded');
-    map.addSource('coverage-source', {
-        type: 'raster',
-        url: 'mapbox://stevefernandes.texas-mobile-coverage'
-    });
-    map.addLayer({
-        id: 'texas-coverage',
-        type: 'raster',
-        source: 'coverage-source',
-        paint: {
-            'raster-opacity': 0.5
-        }
-    });
+    states.forEach(state => {
+        map.addSource(`${state}-coverage-source`, {
+            type: 'raster',
+            url: `mapbox://stevefernandes.${state}-mobile-coverage`
+        });
+    })
+    states.forEach(state => {
+        map.addLayer({
+            id: `${state}-coverage`,
+            type: 'raster',
+            source: `${state}-coverage-source`,
+            paint: {
+                'raster-opacity': 0.5
+            }
+        });
+    })
+    // map.setPaintProperty('texas-coverage', 'raster-hue-rotate', 180);
     console.log('Raster layer added');
 });
 
@@ -90,7 +97,20 @@ geocoder.on('result', (e) => {
     const { x, y, z } = lngLatToTile(coords[0], coords[1], zoom);
     console.log('Tile coordinates:', { x, y, z });
 
-    const tileUrl = `https://api.mapbox.com/v4/stevefernandes.texas-coverage-mobile-test/${z}/${x}/${y}.png?access_token=${mapboxgl.accessToken}`;
+    let state = null;
+    const country = e.result.context?.find((c) => c.id.includes('country'))?.short_code;
+
+    if (country && country.toLowerCase() === 'us') {
+        const region = e.result.context?.find((c) => c.id.includes('region'));
+        state = region ? region.short_code : null;
+        const stateAbbr = region ? region.short_code : null;
+        console.log('State:', state);
+        console.log('State Abbreviation:', stateAbbr);
+    } else {
+        console.log('Location is not in the US');
+    }
+
+    const tileUrl = `https://api.mapbox.com/v4/stevefernandes.texas-mobile-coverage/${z}/${x}/${y}.png?access_token=${mapboxgl.accessToken}`;
     console.log('Fetching tile:', tileUrl);
 
     const img = new Image();
