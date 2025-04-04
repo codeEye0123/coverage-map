@@ -4,17 +4,29 @@ const states = [
     { name: 'texas', short_code: 'US-TX' },
     { name: 'arizona', short_code: 'US-AZ' },
     { name: 'arkansas', short_code: 'US-AR' },
+    { name: 'alaska', short_code: 'US-AL' },
+    { name: 'connecticut', short_code: 'US-CT' },
+    { name: 'colorado', short_code: 'US-CO' },
+    { name: 'california', short_code: 'US-CA' },
+    { name: 'delaware', short_code: 'US-DE' },
+    { name: 'florida', short_code: 'US-FL' },
+    { name: 'georgia', short_code: 'US-GA' },
+    { name: 'hawaii', short_code: 'US-HI' },
+    { name: 'idaho', short_code: 'US-CA' },
+    { name: 'illinois', short_code: 'US-IL' },
+    { name: 'indiana', short_code: 'US-IN' },
+    { name: 'iowa', short_code: 'US-IA' },
 ];
 
 const usBounds = [
-    [-125, 24],
-    [-66, 49]
+    [-179, 18],
+    [-66, 71]
 ];
 
 const map = new mapboxgl.Map({
     container: 'map',
     style: 'mapbox://styles/mapbox/streets-v11',
-    center: [-98, 39], // Center of US
+    center: [-98, 39],
     zoom: 3,
     maxBounds: usBounds,
     minZoom: 3,
