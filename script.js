@@ -1,21 +1,57 @@
 mapboxgl.accessToken = 'pk.eyJ1Ijoic3RldmVmZXJuYW5kZXMiLCJhIjoiY202ZjdiY282MDI4cjJyb21sdTNpc2RscSJ9._ZV-quUh6eC0Oa_OiRaCGA';
 
 const states = [
-    { name: 'texas', short_code: 'US-TX' },
-    { name: 'arizona', short_code: 'US-AZ' },
-    { name: 'arkansas', short_code: 'US-AR' },
-    { name: 'alaska', short_code: 'US-AL' },
-    { name: 'connecticut', short_code: 'US-CT' },
-    { name: 'colorado', short_code: 'US-CO' },
-    { name: 'california', short_code: 'US-CA' },
-    { name: 'delaware', short_code: 'US-DE' },
-    { name: 'florida', short_code: 'US-FL' },
-    { name: 'georgia', short_code: 'US-GA' },
-    { name: 'hawaii', short_code: 'US-HI' },
-    { name: 'idaho', short_code: 'US-CA' },
-    { name: 'illinois', short_code: 'US-IL' },
-    { name: 'indiana', short_code: 'US-IN' },
-    { name: 'iowa', short_code: 'US-IA' },
+    { name: 'alabama-mobile-coverage', short_code: 'US-AL' },
+    { name: 'arizona-mobile-coverage', short_code: 'US-AZ' },
+    { name: 'arkansas-mobile-coverage', short_code: 'US-AR' },
+    { name: 'alaska-mobile-coverage', short_code: 'US-AK' },
+    { name: 'connecticut-mobile-coverage', short_code: 'US-CT' },
+    { name: 'colorado-mobile-coverage', short_code: 'US-CO' },
+    { name: 'california-mobile-coverage', short_code: 'US-CA' },
+    { name: 'delaware-mobile-coverage', short_code: 'US-DE' },
+    { name: '5mx295dz', short_code: 'US-DC' },
+    { name: 'florida-mobile-coverage', short_code: 'US-FL' },
+    { name: 'georgia-mobile-coverage', short_code: 'US-GA' },
+    { name: 'hawaii-mobile-coverage', short_code: 'US-HI' },
+    { name: 'idaho-mobile-coverage', short_code: 'US-CA' },
+    { name: 'illinois-mobile-coverage', short_code: 'US-IL' },
+    { name: 'indiana-mobile-coverage', short_code: 'US-IN' },
+    { name: 'iowa-mobile-coverage', short_code: 'US-IA' },
+    { name: 'kansas-mobile-coverage', short_code: 'US-KS' },
+    { name: 'kentucky-mobile-coverage', short_code: 'US-KY' },
+    { name: 'lousiana-mobile-coverage', short_code: 'US-LA' },
+    { name: 'maine-mobile-coverage', short_code: 'US-ME' },
+    { name: 'maryland-mobile-coverage', short_code: 'US-MD' },
+    { name: 'massachusetts-mobile-coverage', short_code: 'US-MA' },
+    { name: 'michigan-mobile-coverage', short_code: 'US-MI' },
+    { name: 'minnesota-mobile-coverage', short_code: 'US-MN' },
+    { name: 'mississippi-mobile-coverage', short_code: 'US-MS' },
+    { name: 'missouri-mobile-coverage', short_code: 'US-MO' },
+    { name: 'montana-mobile-coverage', short_code: 'US-MT' },
+    { name: 'nebraska-mobile-coverage', short_code: 'US-NE' },
+    { name: 'nevada-mobile-coverage', short_code: 'US-NV' },
+    { name: 'new-hampshire-mobile-coverage', short_code: 'US-NH' },
+    { name: 'new-jersey-mobile-coverage', short_code: 'US-NJ' },
+    { name: 'new-mexico-mobile-coverage', short_code: 'US-NM' },
+    { name: 'new-york-mobile-coverage', short_code: 'US-NY' },
+    { name: 'north-carolina-mobile-coverage', short_code: 'US-NC' },
+    { name: 'north-dakota-mobile-coverage', short_code: 'US-ND' },
+    { name: 'ohio-mobile-coverage', short_code: 'US-OH' },
+    { name: 'oklahoma-mobile-coverage', short_code: 'US-OK' },
+    { name: 'oregon-mobile-coverage', short_code: 'US-OR' },
+    { name: 'pennsylvania-mobile-coverage', short_code: 'US-PA' },
+    { name: 'rhode-island-mobile-coverage', short_code: 'US-RI' },
+    { name: 'south-carolina-mobile-coverage', short_code: 'US-SC' },
+    { name: 'south-dakota-mobile-coverage', short_code: 'US-SD' },
+    { name: 'tennessee-mobile-coverage', short_code: 'US-TN' },
+    { name: 'texas-mobile-coverage', short_code: 'US-TX' },
+    { name: 'utah-mobile-coverage', short_code: 'US-UT' },
+    { name: 'vermont-mobile-coverage', short_code: 'US-VT' },
+    { name: 'virginia-mobile-coverage', short_code: 'US-VA' },
+    { name: 'washington-mobile-coverage', short_code: 'US-WA' },
+    { name: 'west-virginia-mobile-coverage', short_code: 'US-WV' },
+    { name: 'wisconsin-mobile-coverage', short_code: 'US-WI' },
+    { name: 'wyoming-mobile-coverage', short_code: 'US-WY' },
 ];
 
 const usBounds = [
@@ -44,16 +80,17 @@ document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 map.on('load', () => {
     console.log('Map loaded');
     states.forEach(state => {
-        map.addSource(`${state.name}-coverage-source`, {
+        map.addSource(`${state.name}`, {
             type: 'raster',
-            url: `mapbox://stevefernandes.${state.name}-mobile-coverage`
+            url: `mapbox://stevefernandes.${state.name}`
         });
     });
+
     states.forEach(state => {
         map.addLayer({
-            id: `${state.name}-coverage`,
+            id: `${state.name}`,
             type: 'raster',
-            source: `${state.name}-coverage-source`,
+            source: `${state.name}`,
             paint: {
                 'raster-opacity': 0.5
             }
@@ -133,7 +170,7 @@ geocoder.on('result', (e) => {
     }
     const stateName = stateObj.name;
 
-    const tileUrl = `https://api.mapbox.com/v4/stevefernandes.${stateName}-mobile-coverage/${z}/${x}/${y}.png?access_token=${mapboxgl.accessToken}`;
+    const tileUrl = `https://api.mapbox.com/v4/stevefernandes.${stateName}/${z}/${x}/${y}.png?access_token=${mapboxgl.accessToken}`;
     console.log('Fetching tile:', tileUrl);
 
     const img = new Image();
