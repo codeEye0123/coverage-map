@@ -61,7 +61,7 @@ const usBounds = [
 
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/mapbox/streets-v11',
+  style: 'mapbox://styles/stevefernandes/cm97htwg300fo01qq4k6bguof',
   center: [-98.5795, 39.8283],
   zoom: 4,
   maxBounds: usBounds,
@@ -91,13 +91,13 @@ map.on('load', () => {
       id: `${state.name}`,
       type: 'raster',
       source: `${state.name}`,
-      paint: {
-        'raster-opacity': 1,
-        'raster-brightness-min': 0.3,
-        'raster-brightness-max': 0.7,
-        'raster-contrast': 0.8,        // Max is 1
-        'raster-saturation': -0.8      // Desaturates to move toward gray
-      }
+      // paint: {
+      //   'raster-opacity': 1,
+      //   'raster-brightness-min': 0.1,
+      //   'raster-brightness-max': 0.4,
+      //   'raster-contrast': 0.8,
+      //   'raster-saturation': -1
+      // }
     });
   });
   console.log('Raster layer added');
