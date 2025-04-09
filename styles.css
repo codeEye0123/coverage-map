@@ -1,4 +1,5 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     height: 100%;
@@ -84,73 +85,163 @@ body, html {
     background-color: transparent;
 }
 
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    padding: 20px;
-    border-radius: 5px;
-    text-align: center;
-    max-width: 500px;
-    width: 90%;
-}
-
-.modal-content.coverage {
-    background: #e6f0fa;
-}
-
-.modal-content.no-coverage {
-    background: #f0f0f0;
-}
-
-.modal-content h3 {
-    margin: 0 0 10px;
-    color: #333;
-}
-
-.modal-content p {
-    margin: 10px 0;
-    color: #666;
-}
-
-.modal-content form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.modal-content input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 14px;
-}
-
-.modal-content button {
-    padding: 10px;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.modal-content button:hover {
-    background: #0056b3;
-}
-
 .mapboxgl-ctrl-geocoder {
     max-width: unset;
     width: 100%;
     text-align: left;
+}
+
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+#map-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#map {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#header {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+#header h1 {
+    font-size: 16px;
+    margin: 0;
+    color: #333;
+}
+
+#header h2 {
+    font-size: 24px;
+    margin: 5px 0;
+    color: #333;
+}
+
+#header p {
+    font-size: 14px;
+    margin: 10px 0;
+    color: #666;
+}
+
+.geocoder {
+    margin: 0 auto;
+    max-width: 500px;
+}
+
+#legend {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 5px;
+    display: flex;
+    gap: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    border: 1px solid #ccc;
+}
+
+.legend-color.coverage {
+    background-color: #333F48;
+}
+
+.legend-color.no-coverage {
+    background-color: transparent;
+}
+
+.modal,
+#coverage-modal,
+.modal-content,
+.modal-content.coverage,
+.modal-content.no-coverage,
+.modal-content h3,
+.modal-content p,
+.modal-content form,
+.modal-content input,
+.modal-content button,
+.modal-content button:hover {
+  /* Remove these blocks */
+}
+
+/* Add popup-specific styles */
+.popup-content {
+  padding: 15px;
+  text-align: center;
+  max-width: 300px;
+}
+
+.popup-content.coverage {
+  background: #e6f0fa;
+}
+
+.popup-content.no-coverage {
+  background: #f0f0f0;
+}
+
+.popup-content h3 {
+  margin: 0 0 10px;
+  color: #333;
+  font-size: 18px;
+}
+
+.popup-content p {
+  margin: 10px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.popup-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.popup-content input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.popup-content button {
+  padding: 8px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.popup-content button:hover {
+  background: #0056b3;
 }

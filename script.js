@@ -13,7 +13,7 @@ const states = [
   { name: 'florida-mobile-coverage', short_code: 'US-FL' },
   { name: 'georgia-mobile-coverage', short_code: 'US-GA' },
   { name: 'hawaii-mobile-coverage', short_code: 'US-HI' },
-  { name: 'idaho-mobile-coverage', short_code: 'US-CA' },
+  { name: 'idaho-mobile-coverage', short_code: 'US-ID' },
   { name: 'illinois-mobile-coverage', short_code: 'US-IL' },
   { name: 'indiana-mobile-coverage', short_code: 'US-IN' },
   { name: 'iowa-mobile-coverage', short_code: 'US-IA' },
@@ -61,7 +61,7 @@ const usBounds = [
 
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/stevefernandes/cm98kw10h000101r167vo52qf',
+  style: 'mapbox://styles/stevefernandes/cm9999lq200jg01qz7kaa4u09',
   center: [-98.5795, 39.8283],
   zoom: 4,
   maxBounds: usBounds,
@@ -77,6 +77,8 @@ const geocoder = new MapboxGeocoder({
 
 document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 
+let currentMarker = null;
+
 map.on('load', () => {
   console.log('Map loaded');
   states.forEach(state => {
@@ -91,13 +93,13 @@ map.on('load', () => {
       id: `${state.name}`,
       type: 'raster',
       source: `${state.name}`,
-      // paint: {
-      //   'raster-opacity': 1,
-      //   'raster-brightness-min': 0.1,
-      //   'raster-brightness-max': 0.4,
-      //   'raster-contrast': 0.8,
-      //   'raster-saturation': -1
-      // }
+      paint: {
+        'raster-opacity': 0.7,
+        'raster-brightness-min': 0.3,
+        'raster-brightness-max': 0.7,
+        'raster-contrast': 0.8,
+        'raster-saturation': -0.8
+      }
     });
   });
   console.log('Raster layer added');
@@ -129,21 +131,6 @@ function getPixelCoords(lng, lat, tileX, tileY, zoom) {
   return { x: pixelX, y: pixelY };
 }
 
-function showModal(content, className) {
-  const modal = document.getElementById('coverage-modal');
-  const modalContent = document.getElementById('coverage-modal-content');
-
-  modalContent.className = `modal-content ${className}`;
-  modalContent.innerHTML = content;
-  modal.style.display = 'flex';
-
-  modal.addEventListener('click', (event) => {
-    if (event.target === modal) {
-      modal.style.display = 'none';
-    }
-  });
-}
-
 geocoder.on('result', (e) => {
   const coords = e.result.center;
   console.log('Geocoder result:', coords);
@@ -151,9 +138,30 @@ geocoder.on('result', (e) => {
   const country = e.result.context?.find((c) => c.id.includes('country'))?.short_code;
   if (!country || country.toLowerCase() !== 'us') {
     console.log('Location is not in the US');
-    showModal('<p>Please search for a location within the United States.</p>', 'no-coverage');
+    const popup = new mapboxgl.Popup()
+      .setHTML('<p>Please search for a location within the United States.</p>')
+      .setLngLat(coords)
+      .addTo(map);
     return;
   }
+
+  if (currentMarker) {
+    currentMarker.remove();
+  }
+
+  const markerElement = document.createElement('div');
+  markerElement.style.width = '10px';
+  markerElement.style.height = '10px';
+  markerElement.style.backgroundColor = '#00FF00';
+  markerElement.style.borderRadius = '50%';
+  markerElement.style.border = '2px solid #FFFFFF';
+  markerElement.style.cursor = 'pointer';
+
+  currentMarker = new mapboxgl.Marker({
+    anchor: 'bottom'
+  })
+    .setLngLat(coords)
+    .addTo(map);
 
   map.flyTo({ center: coords, zoom: 12 });
 
@@ -169,7 +177,10 @@ geocoder.on('result', (e) => {
   const stateObj = states.find(item => item.short_code === state);
   if (!stateObj) {
     console.log('State not supported in coverage data');
-    showModal('<p>Coverage data not available for this state.</p>', 'no-coverage');
+    const popup = new mapboxgl.Popup()
+      .setHTML('<p>Coverage data not available for this state.</p>')
+      .setLngLat(coords)
+      .addTo(map);
     return;
   }
   const stateName = stateObj.name;
@@ -193,50 +204,81 @@ geocoder.on('result', (e) => {
       const pixelData = context.getImageData(pixel.x, pixel.y, 1, 1).data;
       console.log('Pixel data (RGBA):', pixelData);
 
-      if (pixelData[3] > 0) {
-        const content = `
-                    <h3>✅ Great news! Barn Owl has excellent coverage in your area!</h3>
-                    <p>Enjoy 10% OFF your first order + a Risk-Free 45-Day Trial! Just enter your email to claim your special offer.</p>
-                    <form id="coverage-form">
-                        <input type="text" id="first-name" placeholder="First Name" required>
-                        <input type="text" id="last-name" placeholder="Last Name" required>
-                        <input type="email" id="email" placeholder="Email Address" required>
-                        <input type="tel" id="phone" placeholder="Phone Number" required>
-                        <button type="submit">Shop 10% OFF Now</button>
-                    </form>
-                `;
-        showModal(content, 'coverage');
+      const coverageContent = `
+        <div class="popup-content coverage">
+          <h3>✅ Great news! Barn Owl has excellent coverage in your area!</h3>
+          <p>Enjoy 10% OFF your first order + a Risk-Free 45-Day Trial! Just enter your email to claim your special offer.</p>
+          <form id="coverage-form">
+            <input type="text" id="first-name" placeholder="First Name" required>
+            <input type="text" id="last-name" placeholder="Last Name" required>
+            <input type="email" id="email" placeholder="Email Address" required>
+            <input type="tel" id="phone" placeholder="Phone Number" required>
+            <button type="submit">Shop 10% OFF Now</button>
+          </form>
+        </div>
+      `;
+      const noCoverageContent = `
+        <div class="popup-content no-coverage">
+          <h3>No Coverage</h3>
+          <p>It looks like this spot doesn’t have coverage, but don’t worry! <br/> Try checking a nearby location to claim your discount.</p>
+        </div>
+      `;
 
-        document.getElementById('coverage-form').addEventListener('submit', (event) => {
-          event.preventDefault();
-          const firstName = document.getElementById('first-name').value;
-          const lastName = document.getElementById('last-name').value;
-          const email = document.getElementById('email').value;
-          const phone = document.getElementById('phone').value;
+      const popup = new mapboxgl.Popup({
+        closeOnClick: false, // Prevent closing when clicking outside
+        anchor: 'top',
+        offset: 25 // Position above marker
+      })
+        .setLngLat(coords)
+        .setHTML(pixelData[3] > 0 ? coverageContent : noCoverageContent);
 
-          if (firstName && lastName && email && phone) {
-            submitToKlaviyo(firstName, lastName, email, phone); // Assuming this function exists
-          } else {
-            alert('Please fill out all fields.');
+      let isPopupOpen = false;
+
+      markerElement.addEventListener('click', () => {
+        console.log('Marker clicked');
+        if (!isPopupOpen) {
+          popup.addTo(map);
+          isPopupOpen = true;
+
+          if (pixelData[3] > 0) {
+            const form = document.getElementById('coverage-form');
+            if (form) {
+              form.onsubmit = (event) => {
+                event.preventDefault();
+                const firstName = document.getElementById('first-name').value;
+                const lastName = document.getElementById('last-name').value;
+                const email = document.getElementById('email').value;
+                const phone = document.getElementById('phone').value;
+
+                if (firstName && lastName && email && phone) {
+                  console.log('Form submitted:', { firstName, lastName, email, phone });
+                  popup.remove(); // Close popup on successful submission
+                  isPopupOpen = false;
+                } else {
+                  alert('Please fill out all fields.');
+                }
+              };
+            }
           }
-        });
-      } else {
-        const content = `
-                    <h3>No Coverage</h3>
-                    <p>It looks like this spot doesn’t have coverage, but don’t worry! <br/> Try checking a nearby location to claim your discount.</p>
-                `;
-        showModal(content, 'no-coverage');
-      }
+        } else {
+          popup.remove();
+          isPopupOpen = false;
+        }
+      });
     } else {
       console.log('Pixel out of tile bounds');
-      const content = '<p>Error: Point outside tile</p>';
-      showModal(content, 'no-coverage');
+      const popup = new mapboxgl.Popup()
+        .setHTML('<p>Error: Point outside tile</p>')
+        .setLngLat(coords)
+        .addTo(map);
     }
   };
   img.onerror = () => {
     console.error('Failed to load tile image');
-    const content = '<p>Error loading coverage data</p>';
-    showModal(content, 'no-coverage');
+    const popup = new mapboxgl.Popup()
+      .setHTML('<p>Error loading coverage data</p>')
+      .setLngLat(coords)
+      .addTo(map);
   };
   img.src = tileUrl;
 });
@@ -260,4 +302,10 @@ function saveEmail() {
   } else {
     alert('Please enter a valid email.');
   }
+}
+
+// Placeholder for submitToKlaviyo if not defined
+function submitToKlaviyo(firstName, lastName, email, phone) {
+  console.log('Submitting to Klaviyo:', { firstName, lastName, email, phone });
+  // Add actual Klaviyo API integration here if needed
 }
