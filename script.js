@@ -150,15 +150,16 @@ geocoder.on('result', (e) => {
   }
 
   const markerElement = document.createElement('div');
-  markerElement.style.width = '10px';
-  markerElement.style.height = '10px';
+  markerElement.style.width = '20px';
+  markerElement.style.height = '20px';
   markerElement.style.backgroundColor = '#00FF00';
   markerElement.style.borderRadius = '50%';
   markerElement.style.border = '2px solid #FFFFFF';
   markerElement.style.cursor = 'pointer';
 
   currentMarker = new mapboxgl.Marker({
-    anchor: 'bottom'
+    element: markerElement,
+    anchor: 'center'
   })
     .setLngLat(coords)
     .addTo(map);
@@ -225,9 +226,9 @@ geocoder.on('result', (e) => {
       `;
 
       const popup = new mapboxgl.Popup({
-        closeOnClick: false, // Prevent closing when clicking outside
-        anchor: 'top',
-        offset: 25 // Position above marker
+        closeOnClick: false,
+        anchor: 'bottom',
+        offset: 25
       })
         .setLngLat(coords)
         .setHTML(pixelData[3] > 0 ? coverageContent : noCoverageContent);
