@@ -94,13 +94,13 @@ map.on('load', () => {
       type: 'raster',
       source: `${state.name}`,
       paint: {
-        'raster-opacity': 0.7,
+        'raster-opacity': 1,
         'raster-brightness-min': 0.3,
         'raster-brightness-max': 0.7,
         'raster-contrast': 0.8,
         'raster-saturation': -0.8
       }
-    });
+    }, 'pitch-outline');
   });
   console.log('Raster layer added');
 });

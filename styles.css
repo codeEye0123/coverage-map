@@ -178,21 +178,6 @@ html {
     background-color: transparent;
 }
 
-.modal,
-#coverage-modal,
-.modal-content,
-.modal-content.coverage,
-.modal-content.no-coverage,
-.modal-content h3,
-.modal-content p,
-.modal-content form,
-.modal-content input,
-.modal-content button,
-.modal-content button:hover {
-  /* Remove these blocks */
-}
-
-/* Add popup-specific styles */
 .popup-content {
   padding: 15px;
   text-align: center;
