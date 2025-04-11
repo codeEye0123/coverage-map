@@ -82,7 +82,6 @@ document.getElementById('geocoder').appendChild(geocoder.onAdd(map));
 let currentMarker = null;
 
 map.on('load', () => {
-  console.log('Map loaded');
   states.forEach(state => {
     map.addSource(`${state.name}`, {
       type: 'raster',
@@ -104,7 +103,6 @@ map.on('load', () => {
       }
     }, 'admin-1-boundary-bg');
   });
-  console.log('Raster layer added');
 });
 
 function lngLatToTile(lng, lat, zoom) {
@@ -135,11 +133,9 @@ function getPixelCoords(lng, lat, tileX, tileY, zoom) {
 
 geocoder.on('result', (e) => {
   const coords = e.result.center;
-  console.log('Geocoder result:', coords);
 
   const country = e.result.context?.find((c) => c.id.includes('country'))?.short_code;
   if (!country || country.toLowerCase() !== 'us') {
-    console.log('Location is not in the US');
     const popup = new mapboxgl.Popup()
       .setHTML('<p>Please search for a location within the United States.</p>')
       .setLngLat(coords)
@@ -170,7 +166,6 @@ geocoder.on('result', (e) => {
 
   const zoom = 12;
   const { x, y, z } = lngLatToTile(coords[0], coords[1], zoom);
-  console.log('Tile coordinates:', { x, y, z });
 
   let state = null;
   const region = e.result.context?.find((c) => c.id.includes('region'));
@@ -180,7 +175,6 @@ geocoder.on('result', (e) => {
 
   const stateObj = states.find(item => item.short_code === state);
   if (!stateObj) {
-    console.log('State not supported in coverage data');
     const popup = new mapboxgl.Popup()
       .setHTML('<p>Coverage data not available for this state.</p>')
       .setLngLat(coords)
@@ -190,7 +184,6 @@ geocoder.on('result', (e) => {
   const stateName = stateObj.name;
 
   const tileUrl = `https://api.mapbox.com/v4/stevefernandes.${stateName}/${z}/${x}/${y}.png?access_token=${mapboxgl.accessToken}`;
-  console.log('Fetching tile:', tileUrl);
 
   const img = new Image();
   img.crossOrigin = 'Anonymous';
@@ -202,11 +195,9 @@ geocoder.on('result', (e) => {
     context.drawImage(img, 0, 0);
 
     const pixel = getPixelCoords(coords[0], coords[1], x, y, z);
-    console.log('Pixel coordinates:', pixel);
 
     if (pixel.x >= 0 && pixel.x < 256 && pixel.y >= 0 && pixel.y < 256) {
       const pixelData = context.getImageData(pixel.x, pixel.y, 1, 1).data;
-      console.log('Pixel data (RGBA):', pixelData);
 
       const coverageContent = `
         <div class="popup-content coverage">
@@ -270,7 +261,6 @@ geocoder.on('result', (e) => {
         }
       });
     } else {
-      console.log('Pixel out of tile bounds');
       const popup = new mapboxgl.Popup()
         .setHTML('<p>Error: Point outside tile</p>')
         .setLngLat(coords)
@@ -278,7 +268,6 @@ geocoder.on('result', (e) => {
     }
   };
   img.onerror = () => {
-    console.error('Failed to load tile image');
     const popup = new mapboxgl.Popup()
       .setHTML('<p>Error loading coverage data</p>')
       .setLngLat(coords)
