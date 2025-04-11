@@ -69,6 +69,8 @@ const map = new mapboxgl.Map({
   maxZoom: 17
 });
 
+map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+
 const geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
   mapboxgl: mapboxgl,
