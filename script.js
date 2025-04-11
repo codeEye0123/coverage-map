@@ -175,7 +175,8 @@ geocoder.on('result', (e) => {
   let state = null;
   const region = e.result.context?.find((c) => c.id.includes('region'));
   state = region ? region.short_code : null;
-  console.log('State:', state);
+
+  const address = e.result.text;
 
   const stateObj = states.find(item => item.short_code === state);
   if (!stateObj) {
@@ -209,7 +210,7 @@ geocoder.on('result', (e) => {
 
       const coverageContent = `
         <div class="popup-content coverage">
-          <h3>✅ Great news! Barn Owl has excellent coverage in your area!</h3>
+          <h3>✅ Great news! Barn Owl has excellent coverage in ${address}!</h3>
           <p>Enjoy 10% OFF your first order + a Risk-Free 45-Day Trial! Just enter your email to claim your special offer.</p>
           <form id="coverage-form">
             <input type="text" id="first-name" placeholder="First Name" required>
