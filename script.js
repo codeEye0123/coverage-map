@@ -61,7 +61,7 @@ const usBounds = [
 
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/stevefernandes/cm9afyxe0001z01s4haegggd3',
+  style: 'mapbox://styles/stevefernandes/cm9c0xjpt004q01s8fp0s0ixr',
   center: [-98.5795, 39.8283],
   zoom: 4,
   maxBounds: usBounds,
