@@ -30,24 +30,6 @@ html {
     box-sizing: border-box;
 }
 
-#header h1 {
-    font-size: 16px;
-    margin: 0;
-    color: #333;
-}
-
-#header h2 {
-    font-size: 24px;
-    margin: 5px 0;
-    color: #333;
-}
-
-#header p {
-    font-size: 14px;
-    margin: 10px 0;
-    color: #666;
-}
-
 .geocoder {
     margin: 0 auto;
     max-width: 500px;
@@ -86,56 +68,56 @@ html {
 }
 
 .popup-content {
-  padding: 15px;
-  text-align: center;
-  max-width: 300px;
+    padding: 15px;
+    text-align: center;
+    max-width: 300px;
 }
 
 .popup-content.coverage {
-  background: #e6f0fa;
+    background: #e6f0fa;
 }
 
 .popup-content.no-coverage {
-  background: #f0f0f0;
+    background: #f0f0f0;
 }
 
 .popup-content h3 {
-  margin: 0 0 10px;
-  color: #333;
-  font-size: 18px;
+    margin: 0 0 10px;
+    color: #333;
+    font-size: 18px;
 }
 
 .popup-content p {
-  margin: 10px 0;
-  color: #666;
-  font-size: 14px;
+    margin: 10px 0;
+    color: #666;
+    font-size: 14px;
 }
 
 .popup-content form {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .popup-content input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
 }
 
 .popup-content button {
-  padding: 8px;
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
+    padding: 8px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
 }
 
 .popup-content button:hover {
-  background: #0056b3;
+    background: #0056b3;
 }
 
 .mapboxgl-ctrl-geocoder {
