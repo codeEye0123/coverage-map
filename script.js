@@ -9,7 +9,7 @@ const usCenter = [-98.5795, 39.8283];
 
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/stevefernandes/cm9hhb20o001901sbco4ucfmv',
+  style: 'mapbox://styles/stevefernandes/cm9hhvghf00q701qu5rktfrxb',
   center: usCenter,
   zoom: 4.3,
   maxBounds: usBounds,
