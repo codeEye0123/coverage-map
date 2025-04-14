@@ -9,7 +9,7 @@ const usCenter = [-98.5795, 39.8283];
 
 const map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/stevefernandes/cm9h5rec5000c01sbdvfd3ueg',
+  style: 'mapbox://styles/stevefernandes/cm9hhb20o001901sbco4ucfmv',
   center: usCenter,
   zoom: 4.3,
   maxBounds: usBounds,
@@ -43,7 +43,7 @@ map.on('load', () => {
     paint: {
       'raster-opacity': 0.7,
     }
-  }, 'admin-1-boundary-bg');
+  }, 'aeroway-polygon');
 });
 
 function lngLatToTile(lng, lat, zoom) {
