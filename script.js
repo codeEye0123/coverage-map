@@ -184,11 +184,11 @@ geocoder.on('result', (e) => {
     if (currentPopup) {
       currentPopup.remove();
     }
-    currentPopup = new mapboxgl.Popup()
-      .setHTML('<p>Please search for a location within the United States.</p>')
-      .setLngLat(coords)
-      .addTo(map);
-    map.flyTo({ center: coords, zoom: 12 });
+    // currentPopup = new mapboxgl.Popup()
+    //   .setHTML('<p>Please search for a location within the United States.</p>')
+    //   .setLngLat(coords)
+    //   .addTo(map);
+    // map.flyTo({ center: coords, zoom: 12 });
     return;
   }
 
@@ -197,12 +197,32 @@ geocoder.on('result', (e) => {
     currentPopup.remove();
   }
 
+  const markerDiv = document.querySelector('div[aria-label="Map marker"]');
+  if (markerDiv) {
+    markerDiv.remove();
+  }
+
+  currentMarker = new mapboxgl.Marker({
+    color: '#FF6720'
+  })
+    .setLngLat(coords)
+    .addTo(map);
+
   // Get address and state
   const address = e.result.text;
   const region = e.result.context?.find((c) => c.id.includes('region'));
   const state = region ? region.short_code : null;
 
   // Show popup immediately (no marker)
+  currentMarker.getElement().addEventListener('click', () => {
+    if (currentPopup) {
+      currentPopup.remove();
+      currentPopup = null;
+    } else {
+      showPopup(coords, address, null);
+    }
+  });
+
   showPopup(coords, address, state);
 
   map.flyTo({ center: coords, zoom: 12 });
