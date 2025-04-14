@@ -208,6 +208,9 @@ geocoder.on('result', (e) => {
     .setLngLat(coords)
     .addTo(map);
 
+  const markerElement = currentMarker.getElement();
+  markerElement.style.cursor = 'pointer';
+
   // Get address and state
   const address = e.result.text;
   const region = e.result.context?.find((c) => c.id.includes('region'));
