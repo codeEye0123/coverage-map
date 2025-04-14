@@ -5,10 +5,12 @@ const usBounds = [
   [-66, 71]
 ];
 
+const usCenter = [-98.5795, 39.8283];
+
 const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/stevefernandes/cm9h5rec5000c01sbdvfd3ueg',
-  center: [-98.5795, 39.8283],
+  center: usCenter,
   zoom: 4.3,
   maxBounds: usBounds,
   minZoom: 3,
@@ -178,28 +180,20 @@ function showPopup(coords, address, state) {
 geocoder.on('result', (e) => {
   const coords = e.result.center;
 
+  document.querySelectorAll('div[aria-label="Map marker"]').forEach(div => div.remove());
+
   // Check if location is in the US
   const country = e.result.context?.find((c) => c.id.includes('country'))?.short_code;
   if (!country || country.toLowerCase() !== 'us') {
     if (currentPopup) {
       currentPopup.remove();
     }
-    // currentPopup = new mapboxgl.Popup()
-    //   .setHTML('<p>Please search for a location within the United States.</p>')
-    //   .setLngLat(coords)
-    //   .addTo(map);
-    // map.flyTo({ center: coords, zoom: 12 });
+    currentPopup = new mapboxgl.Popup()
+      .setHTML('<p>Please search for a location within the United States.</p>')
+      .setLngLat(usCenter)
+      .addTo(map);
+    map.flyTo({ center: usCenter, zoom: 4.3 });
     return;
-  }
-
-  // Remove existing popup
-  if (currentPopup) {
-    currentPopup.remove();
-  }
-
-  const markerDiv = document.querySelector('div[aria-label="Map marker"]');
-  if (markerDiv) {
-    markerDiv.remove();
   }
 
   currentMarker = new mapboxgl.Marker({
@@ -210,6 +204,13 @@ geocoder.on('result', (e) => {
 
   const markerElement = currentMarker.getElement();
   markerElement.style.cursor = 'pointer';
+
+  // Remove existing popup
+  if (currentPopup) {
+    currentPopup.remove();
+  }
+
+  
 
   // Get address and state
   const address = e.result.text;
