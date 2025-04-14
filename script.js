@@ -9,7 +9,7 @@ const map = new mapboxgl.Map({
   container: 'map',
   style: 'mapbox://styles/stevefernandes/cm9h5rec5000c01sbdvfd3ueg',
   center: [-98.5795, 39.8283],
-  zoom: 4,
+  zoom: 4.3,
   maxBounds: usBounds,
   minZoom: 3,
   maxZoom: 17
