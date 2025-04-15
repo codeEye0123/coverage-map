@@ -19,7 +19,32 @@ const map = new mapboxgl.Map({
 
 map.addControl(new mapboxgl.NavigationControl(), 'top-right');
 
+const showAlertTemporarily = (condition) => {
+  if (condition) {
+    const div = document.getElementById('ctrlZoom');
+    div.style.display = 'block';
+
+    setTimeout(() => {
+      div.style.display = 'none';
+    }, 5000); // Hide after 5 seconds
+  }
+}
+
 map.scrollZoom.disable();
+
+const mapContainer = document.getElementById('map');
+
+mapContainer.addEventListener('wheel', function (e) {
+  if (e.ctrlKey) {
+    e.preventDefault();
+    map.scrollZoom.enable();
+  }
+  else {
+    e.preventDefault();
+    map.scrollZoom.disable();
+    showAlertTemporarily(true)
+  }
+}, { passive: true });
 
 const geocoder = new MapboxGeocoder({
   accessToken: mapboxgl.accessToken,
