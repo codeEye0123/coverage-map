@@ -8,21 +8,17 @@ html {
 
 #map-container {
     position: relative;
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    height: 60vh;
+    margin: 20px auto;
 }
 
 #map {
-    position: absolute;
-    top: 0;
-    bottom: 0;
     width: 100%;
     height: 100%;
 }
 
 #header {
-    position: absolute;
-    top: 0;
     width: 100%;
     background: rgba(255, 255, 255, 0.9);
     padding: 20px;
